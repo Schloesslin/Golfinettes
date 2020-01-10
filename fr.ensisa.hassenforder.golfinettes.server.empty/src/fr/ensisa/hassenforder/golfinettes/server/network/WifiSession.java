@@ -55,6 +55,8 @@ public class WifiSession extends Thread {
 				return true;
 			case Protocol.SEND_UPDATE_USER :
 				return true;
+			case Protocol.SEND_WIFI_EVENT:
+				return true;
 			default: return false; // connection jammed
 			}
 			writer.send ();
