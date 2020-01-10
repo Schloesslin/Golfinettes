@@ -20,7 +20,7 @@ public class WifiReader extends BasicAbstractReader {
 	private static String versionCodeSoftware;
 	private static String versionCodeMap;
 	private static String versionCodeUser;
-	private static List<Event> events;
+	private static List<Event> events = new ArrayList<Event>();
 	private static Version versionSoftware;
 	private static Version versionMap;
 	private static Version versionUser;
