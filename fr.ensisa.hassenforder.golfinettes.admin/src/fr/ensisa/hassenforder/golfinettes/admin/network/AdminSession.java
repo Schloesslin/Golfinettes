@@ -2,6 +2,7 @@ package fr.ensisa.hassenforder.golfinettes.admin.network;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.ensisa.hassenforder.golfinettes.admin.model.Event;
@@ -94,9 +95,20 @@ public class AdminSession implements ISession {
 			aw.send();
 			AdminReader ar = new AdminReader(this.wifi.getInputStream());
 			ar.receive();
-			List<Event> events = ar.getEvents();
-			System.out.println(events);
-			System.out.println(events.size());
+			List<Event> allEvents = ar.getEvents();
+			List<Event> events = new ArrayList<Event>();
+			System.out.println(kind);
+
+			for (Event e : allEvents) {
+				
+				if ((id == -1 || e.getId() == id) && (e.getKind().equals(kind) || kind.equals(""))) {
+
+					events.add(e);
+				}
+				
+			}
+			//System.out.println(events);
+			//System.out.println(events.size());
 			return events;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

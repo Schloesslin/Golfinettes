@@ -11,8 +11,18 @@ public class Event {
 
 	public String getText() {
 		return text;
-	} 
+	}
+	
+	public long getId() {
+		String[] result = this.text.split("\\s");
+		return Long.parseLong(result[0]);
+	}
 
+	public String getKind() {
+		String[] result = this.text.split("\\s");
+		return result[1];
+	}
+	
 	@Override
 	public String toString() {
 		return text;

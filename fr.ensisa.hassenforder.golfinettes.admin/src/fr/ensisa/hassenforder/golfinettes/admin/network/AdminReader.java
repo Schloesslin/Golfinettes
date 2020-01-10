@@ -51,6 +51,10 @@ public class AdminReader extends BasicAbstractReader {
 		}
 		return events;
 	}
+	
+	public long getEventId(Event e) {
+		return this.readLong();
+	}
 
 	public Event readEvent() {
 		return new Event(this.readString());
