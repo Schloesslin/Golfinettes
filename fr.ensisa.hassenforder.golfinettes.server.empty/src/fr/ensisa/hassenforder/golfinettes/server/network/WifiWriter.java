@@ -1,6 +1,7 @@
 package fr.ensisa.hassenforder.golfinettes.server.network;
 
 import java.io.OutputStream;
+import java.util.List;
 
 import fr.ensisa.hassenforder.golfinettes.network.Protocol;
 import fr.ensisa.hassenforder.golfinettes.server.model.Battery.BatteryMode;
@@ -115,6 +116,14 @@ public class WifiWriter extends BasicAbstractWriter {
     		this.writeInt(e.getUsage().getDetail());
     		this.writeInt(e.getUsage().getAlarm());
     	}
+	}
+	
+	public void writeAllEvents(List<Event> events) {
+		this.writeInt(Protocol.RP_WIFI_EVENT);
+		this.writeInt(events.size());
+		for (Event event : events) {
+			this.writeString(event.toString());
+		}
 	}
 
 }

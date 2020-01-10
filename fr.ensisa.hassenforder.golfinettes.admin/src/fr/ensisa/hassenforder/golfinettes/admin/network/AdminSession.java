@@ -88,6 +88,20 @@ public class AdminSession implements ISession {
 
 	@Override
 	public List<Event> doGetEventList(long id, String kind) {
+		try {
+			AdminWriter aw = new AdminWriter(this.wifi.getOutputStream());
+			aw.writeEvent();
+			aw.send();
+			AdminReader ar = new AdminReader(this.wifi.getInputStream());
+			ar.receive();
+			List<Event> events = ar.getEvents();
+			System.out.println(events);
+			System.out.println(events.size());
+			return events;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
