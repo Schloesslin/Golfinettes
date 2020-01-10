@@ -94,6 +94,7 @@ public class GolfinetteSession implements ISession {
 		try {
 			WifiWriter ww = new WifiWriter(wifi.getOutputStream());
 			for (Event e : events){
+				System.out.println(e);
 				ww.writeAllEvent(e);
 				ww.send();
 			}

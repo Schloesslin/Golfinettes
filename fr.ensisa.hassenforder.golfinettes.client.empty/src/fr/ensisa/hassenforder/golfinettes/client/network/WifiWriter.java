@@ -83,9 +83,11 @@ public class WifiWriter extends BasicAbstractWriter {
     			break;
     		case BORROW :
     			this.writeByte((byte) 1);
+    			this.writeLong(e.getUsage().getBorrower());
     			break;
     		case RETURN :
     			this.writeByte((byte) 2);
+    			this.writeLong(e.getUsage().getBorrower());
     			break;
     		
     		}

@@ -56,6 +56,8 @@ public class WifiReader extends BasicAbstractReader {
 			break;
 		case Protocol.SEND_WIFI_EVENT:
 			events.add(this.readWifiEvent());
+			System.out.println(events);
+			break;
 			// System.out.println(Float.parseFloat("2.5"));
 		}
 	}
@@ -118,10 +120,15 @@ public class WifiReader extends BasicAbstractReader {
 
 	public Event readWifiEvent() {
 		long id = this.readLong();
+		System.out.println(id);
 		long timestamp = this.readLong();
+		System.out.println(timestamp);
 		Location location = this.readLocation();
+		System.out.println(location);
 		Battery battery = this.readBattery();
+		System.out.println(battery);
 		Usage usage = this.readUsage();
+		System.out.println(usage);
 		return new Event(id, timestamp, "wifi").withLocation(location).withBattery(battery).withUsage(usage);
 	}
 
@@ -157,7 +164,7 @@ public class WifiReader extends BasicAbstractReader {
 	}
 
 	public Usage readUsage() {
-		long borrower = this.readLong();
+		long borrower = 0;
 		BorrowerEvent event = BorrowerEvent.BORROW;
 		switch (this.readByte()) {
 		case 0:
@@ -165,9 +172,11 @@ public class WifiReader extends BasicAbstractReader {
 			break;
 		case 1:
 			event = BorrowerEvent.BORROW;
+			borrower = this.readLong();
 			break;
 		case 2:
 			event = BorrowerEvent.RETURN;
+			borrower = this.readLong();
 			break;
 		}
 		UsageState usage = UsageState.STEADY_LONG;
