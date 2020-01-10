@@ -97,6 +97,7 @@ public class GolfinetteSession implements ISession {
 				ww.writeAllEvent(e);
 				ww.send();
 			}
+			return true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
