@@ -91,6 +91,17 @@ public class GolfinetteSession implements ISession {
 
 	@Override
 	public boolean doWifi(List<Event> events) {
+		try {
+			WifiWriter ww = new WifiWriter(wifi.getOutputStream());
+			for (Event e : events){
+				ww.writeAllEvent(e);
+				ww.send();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 
