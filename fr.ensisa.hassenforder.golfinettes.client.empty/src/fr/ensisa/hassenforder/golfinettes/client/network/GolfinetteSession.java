@@ -92,8 +92,8 @@ public class GolfinetteSession implements ISession {
 	@Override
 	public boolean doWifi(List<Event> events) {
 		try {
-			WifiWriter ww = new WifiWriter(wifi.getOutputStream());
 			for (Event e : events){
+				WifiWriter ww = new WifiWriter(wifi.getOutputStream());
 				System.out.println(e);
 				ww.writeAllEvent(e);
 				ww.send();
