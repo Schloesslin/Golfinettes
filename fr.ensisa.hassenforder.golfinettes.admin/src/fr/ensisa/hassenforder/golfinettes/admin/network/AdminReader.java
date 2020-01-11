@@ -20,6 +20,7 @@ public class AdminReader extends BasicAbstractReader {
 	}
 
 	public void receive() {
+		
 		type = readInt();
 		version = null;
 		events = null;
@@ -27,6 +28,9 @@ public class AdminReader extends BasicAbstractReader {
 		switch (type) {
 		case Protocol.RP_WIFI_EVENT:
 			this.events = this.readAllEvents();
+			break;
+		case Protocol.RP_GOLFINETTES:
+			this.golfinettes = this.readAllGolfinettes();
 			break;
 		}
 	}
@@ -52,12 +56,25 @@ public class AdminReader extends BasicAbstractReader {
 		return events;
 	}
 	
+	public List<Golfinette> readAllGolfinettes(){
+		List<Golfinette> golfinettes = new ArrayList<Golfinette>();
+		int n = this.readInt();
+		for (int i = 0; i < n; i++) {
+			golfinettes.add(this.readGolfinette());
+		}
+		return golfinettes;
+	}
+	
 	public long getEventId(Event e) {
 		return this.readLong();
 	}
 
 	public Event readEvent() {
 		return new Event(this.readString());
+	}
+	
+	public Golfinette readGolfinette() {
+		return new Golfinette(this.readString());
 	}
 
 }

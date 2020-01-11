@@ -6,6 +6,7 @@ import java.util.List;
 import fr.ensisa.hassenforder.golfinettes.network.Protocol;
 import fr.ensisa.hassenforder.golfinettes.server.model.Battery.BatteryMode;
 import fr.ensisa.hassenforder.golfinettes.server.model.Event;
+import fr.ensisa.hassenforder.golfinettes.server.model.Golfinette;
 import fr.ensisa.hassenforder.golfinettes.server.model.Usage.BorrowerEvent;
 import fr.ensisa.hassenforder.golfinettes.server.model.Usage.UsageState;
 import fr.ensisa.hassenforder.golfinettes.server.model.Version;
@@ -56,7 +57,7 @@ public class WifiWriter extends BasicAbstractWriter {
     	}
     	
     }
-	
+	/*
 	public void writeEvent(Event e) {
 		this.writeInt(Protocol.RP_WIFI_EVENT);
     	if (e != null) {
@@ -116,7 +117,7 @@ public class WifiWriter extends BasicAbstractWriter {
     		this.writeInt(e.getUsage().getDetail());
     		this.writeInt(e.getUsage().getAlarm());
     	}
-	}
+	*/
 	
 	public void writeAllEvents(List<Event> events) {
 		this.writeInt(Protocol.RP_WIFI_EVENT);
@@ -124,6 +125,16 @@ public class WifiWriter extends BasicAbstractWriter {
 		for (Event event : events) {
 			this.writeString(event.toString());
 		}
+	}
+	
+	public void writeGolfinette(List<Golfinette> golfinette) {
+		//System.out.println("iciiii");
+		this.writeInt(Protocol.RP_GOLFINETTES);
+		this.writeInt(golfinette.size());
+		for (Golfinette g : golfinette) {
+			this.writeString(g.toString());
+		}
+		
 	}
 
 }

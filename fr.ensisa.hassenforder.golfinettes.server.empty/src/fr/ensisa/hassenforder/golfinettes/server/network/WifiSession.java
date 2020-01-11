@@ -37,7 +37,7 @@ public class WifiSession extends Thread {
 			WifiWriter writer = new WifiWriter (connection.getOutputStream());
 			WifiReader reader = new WifiReader (connection.getInputStream());
 			reader.receive ();
-			System.out.println(reader.getType());
+			//System.out.println(reader.getType());
 			switch (reader.getType ()) {
 			case 0 : return false; // socket closed
 			case 666 : break; // to remove, inserted to hide error
@@ -59,7 +59,12 @@ public class WifiSession extends Thread {
 			case Protocol.SEND_WIFI_EVENT:
 				return true;
 			case Protocol.RQ_WIFI_EVENT:
+				
 				writer.writeAllEvents(reader.getEvents());
+				break;
+			case Protocol.RQ_GOLFINETTES:
+				//System.out.println(reader.getGolfinettes());
+				writer.writeGolfinette(reader.getGolfinettes());
 				break;
 			default: return false; // connection jammed
 			}

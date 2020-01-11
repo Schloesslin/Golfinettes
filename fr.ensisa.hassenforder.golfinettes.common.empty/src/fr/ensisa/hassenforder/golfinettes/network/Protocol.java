@@ -20,4 +20,6 @@ public class Protocol {
 	public static final int SEND_WIFI_EVENT			= 0x07;
 	public static final int RQ_WIFI_EVENT			= 0x08;
 	public static final int RP_WIFI_EVENT			= 0x108;
+	public static final int RQ_GOLFINETTES			= 0x09;
+	public static final int RP_GOLFINETTES			= 0x109;
 }

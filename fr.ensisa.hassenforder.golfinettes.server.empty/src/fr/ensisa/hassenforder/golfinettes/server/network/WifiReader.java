@@ -2,12 +2,14 @@ package fr.ensisa.hassenforder.golfinettes.server.network;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import fr.ensisa.hassenforder.golfinettes.network.Protocol;
 import fr.ensisa.hassenforder.golfinettes.server.model.Battery;
 import fr.ensisa.hassenforder.golfinettes.server.model.Battery.BatteryMode;
 import fr.ensisa.hassenforder.golfinettes.server.model.Event;
+import fr.ensisa.hassenforder.golfinettes.server.model.Golfinette;
 import fr.ensisa.hassenforder.golfinettes.server.model.Location;
 import fr.ensisa.hassenforder.golfinettes.server.model.Usage;
 import fr.ensisa.hassenforder.golfinettes.server.model.Usage.BorrowerEvent;
@@ -21,6 +23,7 @@ public class WifiReader extends BasicAbstractReader {
 	private static String versionCodeMap;
 	private static String versionCodeUser;
 	private static List<Event> events = new ArrayList<Event>();
+	private static List<Golfinette> golfinettes = new ArrayList<Golfinette>();
 	private static Version versionSoftware;
 	private static Version versionMap;
 	private static Version versionUser;
@@ -56,7 +59,9 @@ public class WifiReader extends BasicAbstractReader {
 			break;
 		case Protocol.SEND_WIFI_EVENT:
 			events.add(this.readWifiEvent());
-			System.out.println(events.size());
+			break;
+		case Protocol.RQ_GOLFINETTES:
+			golfinettes.add(this.readGolfinettes());
 			break;
 			// System.out.println(Float.parseFloat("2.5"));
 		}
@@ -96,6 +101,10 @@ public class WifiReader extends BasicAbstractReader {
 
 	public String getKind() {
 		return kind;
+	}
+	
+	public List<Golfinette> getGolfinettes() {
+		return golfinettes;
 	}
 
 	public Version readVersion() {
@@ -192,6 +201,12 @@ public class WifiReader extends BasicAbstractReader {
 		int detail = this.readInt();
 		int alarm = this.readInt();
 		return new Usage(borrower, event, usage, detail, alarm);
+	}
+	
+	public Golfinette readGolfinettes(){
+		//ArrayList<Golfinette> golfinettes = new ArrayList<Golfinette>();
+		//golfinettes.add(new Golfinette(this.readInt(), new HashMap<String, Integer>()));
+		return new Golfinette(1, new HashMap<String, Integer>());
 	}
 
 }

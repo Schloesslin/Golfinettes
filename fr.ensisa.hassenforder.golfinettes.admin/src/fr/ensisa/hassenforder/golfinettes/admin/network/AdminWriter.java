@@ -55,5 +55,10 @@ public class AdminWriter extends BasicAbstractWriter {
 	public void writeEvent() {
 		this.writeInt(Protocol.RQ_WIFI_EVENT);
 	}
+	
+	public void writeGolfinettes() {
+
+		this.writeInt(Protocol.RQ_GOLFINETTES);
+	}
 
 }

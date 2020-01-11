@@ -71,6 +71,7 @@ public class AdminSession implements ISession {
 	@Override
 	public String doUsersUpdate(Version version) {
 		try {
+
 			AdminWriter aw = new AdminWriter(wifi.getOutputStream());
 			aw.writeVersionUser(version);
 			aw.send();
@@ -84,6 +85,23 @@ public class AdminSession implements ISession {
 
 	@Override
 	public List<Golfinette> doGetGolfinetteList() {
+		try {
+			
+
+			AdminWriter aw = new AdminWriter(this.wifi.getOutputStream());
+			aw.writeGolfinettes();
+			aw.send();
+			
+			AdminReader ar = new AdminReader(this.wifi.getInputStream());
+			ar.receive();
+
+			List<Golfinette> golfinettes = ar.getGolfinettes();
+
+			return golfinettes;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
