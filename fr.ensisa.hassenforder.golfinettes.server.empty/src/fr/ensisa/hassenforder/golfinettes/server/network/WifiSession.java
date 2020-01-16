@@ -50,19 +50,16 @@ public class WifiSession extends Thread {
 				writer.writeVersionUser(listener.getUsersVersion());
 				break;
 			case Protocol.SEND_UPDATE_SOFTWARE:
-				listener.putSoftwareVersion(reader.getVersion());
-				break;
+				return listener.putSoftwareVersion(reader.getVersion());
 			case Protocol.SEND_UPDATE_MAP :
-				listener.putMapVersion(reader.getVersion());
-				break;
+				return listener.putMapVersion(reader.getVersion());
 			case Protocol.SEND_UPDATE_USER :
-				listener.putUsersVersion(reader.getVersion());
-				break;
+				return listener.putUsersVersion(reader.getVersion());
 			case Protocol.SEND_WIFI_EVENT:
-				return true;
-			case Protocol.RQ_WIFI_EVENT:
+				return listener.addEvents(reader.getEvents());
 				
-				writer.writeAllEvents(reader.getEvents());
+			case Protocol.RQ_WIFI_EVENT:
+				writer.writeAllEvents(listener.getEvents(reader.getId(), reader.getKind()));
 				break;
 			case Protocol.RQ_GOLFINETTES:
 				//System.out.println(reader.getGolfinettes());

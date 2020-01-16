@@ -25,7 +25,7 @@ public class WifiReader extends BasicAbstractReader {
 	//private static List<Event> events = new ArrayList<Event>();
 	private static Map<Long,Integer> counts = new HashMap<Long,Integer>();
 	
-	private static List<Event> events;
+	private List<Event> events;
 	private String versionCode;
 	private Version version;
 
@@ -60,7 +60,11 @@ public class WifiReader extends BasicAbstractReader {
 			this.versionCode = this.readVersionCode();
 			break;
 		case Protocol.SEND_WIFI_EVENT:
-			this.events.add(this.readWifiEvent());
+			this.events = this.readWifiEvent();
+			break;
+		case Protocol.RQ_WIFI_EVENT:
+			this.id = this.readLong();
+			this.kind = this.readString();
 			break;
 		
 		}
@@ -107,23 +111,18 @@ public class WifiReader extends BasicAbstractReader {
 		return this.readString();
 	}
 
-	public Event readWifiEvent() {
-		long id = this.readLong();
-		long timestamp = this.readLong();
-		Location location = this.readLocation();
-		Battery battery = this.readBattery();
-		Usage usage = this.readUsage();
-		
-		if (counts.get(id) != null) {
-			int count = counts.get(id)+1;
-			counts.remove(id);
-			counts.put(id, count);
+	public List<Event> readWifiEvent() {
+		int size = this.readInt();
+		ArrayList<Event> events = new ArrayList<Event>();
+		for(int i = 0; i < size; i++) {
+			long id = this.readLong();
+			long timestamp = this.readLong();
+			Location location = this.readLocation();
+			Battery battery = this.readBattery();
+			Usage usage = this.readUsage();
+			events.add(new Event(id, timestamp, "wifi").withLocation(location).withBattery(battery).withUsage(usage));
 		}
-		else {
-			counts.put(id, 1);
-		}
-		
-		return new Event(id, timestamp, "wifi").withLocation(location).withBattery(battery).withUsage(usage);
+		return events;
 	}
 
 	public Location readLocation() {

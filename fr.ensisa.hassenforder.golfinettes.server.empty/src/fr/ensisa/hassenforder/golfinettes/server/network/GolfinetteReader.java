@@ -41,8 +41,23 @@ public class GolfinetteReader extends BasicAbstractReader {
 		long timeStamp = this.readLong();
 		Location loc = this.readLocation();
 		int load = this.readAsByte();
-		int temperature = this.readAsByte();
-		Battery battery = new Battery(temperature, load, -1, -1, null);
+		//int temperature = this.readAsByte();
+		BatteryMode mode = null;
+		switch(this.readAsByte()) {
+		case 1:
+			mode = BatteryMode.FAST_CHARGING;
+			break;
+		case 2:
+			mode = BatteryMode.PLUGGED_ONLY;
+			break;
+		case 3:
+			mode = BatteryMode.SLOW_CHARGING;
+			break;
+		case 4:
+			mode = BatteryMode.UNPLUGGED;
+			break;
+		}
+		Battery battery = new Battery(Integer.MIN_VALUE, load, -1, -1, mode);
 		BorrowerEvent borrowerEvent = this.readBorrowerEvent();
 		UsageState usageState = this.readUsageState();
 		Usage usage = new Usage(-1, borrowerEvent, usageState, -1, -1);

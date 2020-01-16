@@ -12,33 +12,33 @@ import fr.ensisa.hassenforder.golfinettes.network.Protocol;
 
 public class GolfinetteSession implements ISession {
 
-    private Socket wifi;
+	private Socket wifi;
 
-    public GolfinetteSession() {
-    }
+	public GolfinetteSession() {
+	}
 
-    @Override
-    synchronized public boolean close() {
-        try {
-            if (wifi != null) {
-                wifi.close();
-            }
-            wifi = null;
-        } catch (IOException e) {
-        }
-        return true;
-    }
+	@Override
+	synchronized public boolean close() {
+		try {
+			if (wifi != null) {
+				wifi.close();
+			}
+			wifi = null;
+		} catch (IOException e) {
+		}
+		return true;
+	}
 
-    @Override
-    synchronized public boolean open() {
-        this.close();
-        try {
-            wifi = new Socket("localhost", Protocol.GOLFINETTES_WIFI_PORT);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
+	@Override
+	synchronized public boolean open() {
+		this.close();
+		try {
+			wifi = new Socket("localhost", Protocol.GOLFINETTES_WIFI_PORT);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
 
 	@Override
 	public Version doSoftwareUpdate(String versionCode) {
@@ -53,7 +53,7 @@ public class GolfinetteSession implements ISession {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -92,50 +92,48 @@ public class GolfinetteSession implements ISession {
 	@Override
 	public boolean doWifi(List<Event> events) {
 		try {
-			for (Event e : events){
-				WifiWriter ww = new WifiWriter(wifi.getOutputStream());
-				System.out.println(e);
-				ww.writeAllEvent(e);
-				ww.send();
-			}
+
+			WifiWriter ww = new WifiWriter(wifi.getOutputStream());
+
+			ww.writeAllEvents(events );
+			ww.send();
+
 			return true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 
 	private enum Decision {
-		SIGFOX_STD,
-		ALARME,
-		MESSAGE_X,
-		MESSAGE_Y,
-		
+		SIGFOX_STD, ALARME, MESSAGE_X, MESSAGE_Y,
+
 	}
 
-	private Decision decisionTaker (Event last) {
-		if(last.getBattery().getLoad()<20) {
+	private Decision decisionTaker(Event last) {
+		if (last.getBattery().getLoad() < 20) {
 			return Decision.ALARME;
-		}
-		else if (last.getBattery().getLoad()<40) {
+		} else if (last.getBattery().getLoad() < 40) {
 			return Decision.MESSAGE_X;
 		}
-		
+
 		return Decision.SIGFOX_STD;
 	}
 
 	@Override
 	public void doSigFox(Event lastEvent) {
 //        try {
-            GolfinetteWriter w = new GolfinetteWriter("localhost", Protocol.GOLFINETTES_SIGFOX_PORT);
-            switch (decisionTaker(lastEvent)) {
-            case SIGFOX_STD		: w.createSigFoxStd (lastEvent); break;
-            }
-            w.send();
+		GolfinetteWriter w = new GolfinetteWriter("localhost", Protocol.GOLFINETTES_SIGFOX_PORT);
+		switch (decisionTaker(lastEvent)) {
+		case SIGFOX_STD:
+			w.createSigFoxStd(lastEvent);
+			break;
+		}
+		w.send();
 //        } catch (IOException e) {
 //        }
 	}
 
- }
+}

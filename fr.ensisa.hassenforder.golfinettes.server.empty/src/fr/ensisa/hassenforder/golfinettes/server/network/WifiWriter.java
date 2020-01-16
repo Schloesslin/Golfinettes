@@ -56,7 +56,7 @@ public class WifiWriter extends BasicAbstractWriter {
     	
     }
 	
-	public void writeAllEvents(List<Event> events) {
+	public void writeAllEvents(Collection<Event> events) {
 		this.writeInt(Protocol.RP_WIFI_EVENT);
 		this.writeInt(events.size());
 		for (Event event : events) {

@@ -52,8 +52,10 @@ public class AdminWriter extends BasicAbstractWriter {
 
 	}
 	
-	public void writeEvent() {
+	public void writeEvent(long id, String kind) {
 		this.writeInt(Protocol.RQ_WIFI_EVENT);
+		this.writeLong(id);
+		this.writeString(kind);
 	}
 	
 	public void writeGolfinettes() {

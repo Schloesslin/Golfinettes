@@ -47,8 +47,22 @@ public class GolfinetteWriter extends BasicAbstractWriter {
 		this.writeLong(lastEvent.getTimestamp().getTime());
 		this.writeLocation(lastEvent.getLocation()); // 8
 		this.writeAsByte(lastEvent.getBattery().getLoad()); // 9
-		this.writeAsByte(lastEvent.getBattery().getTemperature()); // 10
-		
+		//this.writeAsByte(lastEvent.getBattery().getTemperature()); // 10
+		switch(lastEvent.getBattery().getMode()) {
+			case FAST_CHARGING:
+				this.writeAsByte(1);
+				break;
+			case PLUGGED_ONLY:
+				this.writeAsByte(2);
+				break;
+			case SLOW_CHARGING:
+				this.writeAsByte(3);
+				break;
+			case UNPLUGGED:
+				this.writeAsByte(4);
+				break;
+			
+		}
 		switch (lastEvent.getUsage().getEvent()) { // 11
 		case FREE:
 			this.writeAsByte(1);

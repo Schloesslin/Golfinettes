@@ -109,25 +109,15 @@ public class AdminSession implements ISession {
 	public List<Event> doGetEventList(long id, String kind) {
 		try {
 			AdminWriter aw = new AdminWriter(this.wifi.getOutputStream());
-			aw.writeEvent();
+			aw.writeEvent(id,kind);
 			aw.send();
 			AdminReader ar = new AdminReader(this.wifi.getInputStream());
 			ar.receive();
 			List<Event> allEvents = ar.getEvents();
-			List<Event> events = new ArrayList<Event>();
-			//System.out.println(kind);
-
-			for (Event e : allEvents) {
-				
-				if ((id == -1 || getId(e) == id) && (getKind(e).equals(kind) || kind.equals(""))) {
-
-					events.add(e);
-				}
-				
-			}
+			
 			//System.out.println(events);
 			//System.out.println(events.size());
-			return events;
+			return allEvents;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
