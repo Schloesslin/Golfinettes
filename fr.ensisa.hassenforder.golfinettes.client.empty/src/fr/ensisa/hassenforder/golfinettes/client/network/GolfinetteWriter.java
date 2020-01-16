@@ -28,6 +28,17 @@ public class GolfinetteWriter extends BasicAbstractWriter {
 		
 	}
 
+	public void createAlarm(Event lastEvent) {
+		
+	}
+	
+	public void createMesaageX(Event lastEvent) {
+		
+	}
+	public void createMesaageY(Event lastEvent) {
+		
+	}
+	
 	@Override
 	public void send() {
         byte[] message = baos.toByteArray();

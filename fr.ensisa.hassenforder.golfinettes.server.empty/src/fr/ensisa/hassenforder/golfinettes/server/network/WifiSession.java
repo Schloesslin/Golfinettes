@@ -15,7 +15,6 @@ public class WifiSession extends Thread {
 
 	private Socket connection;
 	private NetworkListener listener;
-	
 	public WifiSession(Socket connection, NetworkListener listener) {
 		this.connection = connection;
 		this.listener = listener;
@@ -42,20 +41,23 @@ public class WifiSession extends Thread {
 			case 0 : return false; // socket closed
 			case 666 : break; // to remove, inserted to hide error
 			case Protocol.RQ_UPDATE_SOFTWARE:
-				writer.writeVersionSoftware(reader.getVersionSoftware());
+				writer.writeVersionSoftware(listener.getSoftwareVersion());
 				break;
 			case Protocol.RQ_UPDATE_MAP :
-				writer.writeVersionMap(reader.getVersionMap());
+				writer.writeVersionMap(listener.getMapVersion());
 				break;
 			case Protocol.RQ_UPDATE_USER :
-				writer.writeVersionUser(reader.getVersionUser());
+				writer.writeVersionUser(listener.getUsersVersion());
 				break;
 			case Protocol.SEND_UPDATE_SOFTWARE:
-				return true;
+				listener.putSoftwareVersion(reader.getVersion());
+				break;
 			case Protocol.SEND_UPDATE_MAP :
-				return true;
+				listener.putMapVersion(reader.getVersion());
+				break;
 			case Protocol.SEND_UPDATE_USER :
-				return true;
+				listener.putUsersVersion(reader.getVersion());
+				break;
 			case Protocol.SEND_WIFI_EVENT:
 				return true;
 			case Protocol.RQ_WIFI_EVENT:
@@ -64,7 +66,7 @@ public class WifiSession extends Thread {
 				break;
 			case Protocol.RQ_GOLFINETTES:
 				//System.out.println(reader.getGolfinettes());
-				writer.writeGolfinette(reader.getGolfinettes());
+				writer.writeGolfinette(listener.getGolfinettes());
 				break;
 			default: return false; // connection jammed
 			}

@@ -115,11 +115,11 @@ public class AdminSession implements ISession {
 			ar.receive();
 			List<Event> allEvents = ar.getEvents();
 			List<Event> events = new ArrayList<Event>();
-			System.out.println(kind);
+			//System.out.println(kind);
 
 			for (Event e : allEvents) {
 				
-				if ((id == -1 || e.getId() == id) && (e.getKind().equals(kind) || kind.equals(""))) {
+				if ((id == -1 || getId(e) == id) && (getKind(e).equals(kind) || kind.equals(""))) {
 
 					events.add(e);
 				}
@@ -133,6 +133,16 @@ public class AdminSession implements ISession {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static long getId(Event e) {
+		String[] result = e.getText().split("\\s");
+		return Long.parseLong(result[0]);
+	}
+
+	public static String getKind(Event e) {
+		String[] result = e.getText().split("\\s");
+		return result[1];
 	}
 
  }

@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import fr.ensisa.hassenforder.golfinettes.network.Protocol;
 import fr.ensisa.hassenforder.golfinettes.server.model.Battery;
@@ -19,14 +21,14 @@ import fr.ensisa.hassenforder.network.BasicAbstractReader;
 
 public class WifiReader extends BasicAbstractReader {
 
-	private static String versionCodeSoftware;
-	private static String versionCodeMap;
-	private static String versionCodeUser;
-	private static List<Event> events = new ArrayList<Event>();
-	private static List<Golfinette> golfinettes = new ArrayList<Golfinette>();
-	private static Version versionSoftware;
-	private static Version versionMap;
-	private static Version versionUser;
+	
+	//private static List<Event> events = new ArrayList<Event>();
+	private static Map<Long,Integer> counts = new HashMap<Long,Integer>();
+	
+	private static List<Event> events;
+	private String versionCode;
+	private Version version;
+
 	private long id;
 	private String kind;
 
@@ -40,59 +42,40 @@ public class WifiReader extends BasicAbstractReader {
 		case 0:
 			break;
 		case Protocol.SEND_UPDATE_SOFTWARE:
-			versionSoftware = this.readVersion();
+			this.version = this.readVersion();
 			break;
 		case Protocol.RQ_UPDATE_SOFTWARE:
-			versionCodeSoftware = this.readVersionCode();
+			this.versionCode = this.readVersionCode();
 			break;
 		case Protocol.SEND_UPDATE_MAP:
-			versionMap = this.readVersion();
+			this.version = this.readVersion();
 			break;
 		case Protocol.RQ_UPDATE_MAP:
-			versionCodeMap = this.readVersionCode();
+			this.versionCode = this.readVersionCode();
 			break;
 		case Protocol.SEND_UPDATE_USER:
-			versionUser = this.readVersion();
+			this.version = this.readVersion();
 			break;
 		case Protocol.RQ_UPDATE_USER:
-			versionCodeUser = this.readVersionCode();
+			this.versionCode = this.readVersionCode();
 			break;
 		case Protocol.SEND_WIFI_EVENT:
-			events.add(this.readWifiEvent());
+			this.events.add(this.readWifiEvent());
 			break;
-		case Protocol.RQ_GOLFINETTES:
-			golfinettes.add(this.readGolfinettes());
-			break;
-			// System.out.println(Float.parseFloat("2.5"));
+		
 		}
 	}
-
-	public String getVersionCodeSoftware() {
-		return versionCodeSoftware;
+	
+	public Version getVersion() {
+		return version;
 	}
-
-	public String getVersionCodeMap() {
-		return versionCodeMap;
-	}
-
-	public String getVersionCodeUser() {
-		return versionCodeUser;
+	
+	public String getVersionCode() {
+		return versionCode;
 	}
 
 	public List<Event> getEvents() {
 		return events;
-	}
-
-	public Version getVersionSoftware() {
-		return versionSoftware;
-	}
-
-	public Version getVersionMap() {
-		return versionMap;
-	}
-
-	public Version getVersionUser() {
-		return versionUser;
 	}
 
 	public long getId() {
@@ -103,9 +86,6 @@ public class WifiReader extends BasicAbstractReader {
 		return kind;
 	}
 	
-	public List<Golfinette> getGolfinettes() {
-		return golfinettes;
-	}
 
 	public Version readVersion() {
 		String versionCode = this.readString();
@@ -133,6 +113,16 @@ public class WifiReader extends BasicAbstractReader {
 		Location location = this.readLocation();
 		Battery battery = this.readBattery();
 		Usage usage = this.readUsage();
+		
+		if (counts.get(id) != null) {
+			int count = counts.get(id)+1;
+			counts.remove(id);
+			counts.put(id, count);
+		}
+		else {
+			counts.put(id, 1);
+		}
+		
 		return new Event(id, timestamp, "wifi").withLocation(location).withBattery(battery).withUsage(usage);
 	}
 
@@ -203,10 +193,5 @@ public class WifiReader extends BasicAbstractReader {
 		return new Usage(borrower, event, usage, detail, alarm);
 	}
 	
-	public Golfinette readGolfinettes(){
-		//ArrayList<Golfinette> golfinettes = new ArrayList<Golfinette>();
-		//golfinettes.add(new Golfinette(this.readInt(), new HashMap<String, Integer>()));
-		return new Golfinette(1, new HashMap<String, Integer>());
-	}
 
 }

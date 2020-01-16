@@ -109,9 +109,20 @@ public class GolfinetteSession implements ISession {
 
 	private enum Decision {
 		SIGFOX_STD,
+		ALARME,
+		MESSAGE_X,
+		MESSAGE_Y,
+		
 	}
 
 	private Decision decisionTaker (Event last) {
+		if(last.getBattery().getLoad()<20) {
+			return Decision.ALARME;
+		}
+		else if (last.getBattery().getLoad()<40) {
+			return Decision.MESSAGE_X;
+		}
+		
 		return Decision.SIGFOX_STD;
 	}
 
