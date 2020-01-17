@@ -41,7 +41,6 @@ public class GolfinetteReader extends BasicAbstractReader {
 		long timeStamp = this.readLong();
 		Location loc = this.readLocation();
 		int load = this.readAsByte();
-		//int temperature = this.readAsByte();
 		BatteryMode mode = null;
 		switch(this.readAsByte()) {
 		case 1:

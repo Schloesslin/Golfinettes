@@ -25,7 +25,6 @@ public class WifiWriter extends BasicAbstractWriter {
     	for (byte b : version.getFileContent2()) {
     		this.writeByte(b);
     	}
-    	
     }
 	
 	public void writeVersionMap(Version version) {
@@ -36,7 +35,6 @@ public class WifiWriter extends BasicAbstractWriter {
     	for (byte b : version.getFileContent2()) {
     		this.writeByte(b);
     	}
-    	
     }
 
 	public void writeVersionUser(Version version) {
@@ -53,7 +51,6 @@ public class WifiWriter extends BasicAbstractWriter {
     	else {
     		this.writeInt(0);
     	}
-    	
     }
 	
 	public void writeAllEvents(Collection<Event> events) {
@@ -70,7 +67,6 @@ public class WifiWriter extends BasicAbstractWriter {
 		for (Golfinette g : golfinette) {
 			this.writeString(g.toString());
 		}
-		
 	}
 
 }

@@ -98,9 +98,6 @@ public class GolfinetteWriter extends BasicAbstractWriter {
 		
 	}
 	
-	public void createMesaageX(Event lastEvent) {
-		
-	}
 	public void createMesaageY(Event lastEvent) {
 		
 	}

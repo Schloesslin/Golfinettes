@@ -21,14 +21,9 @@ import fr.ensisa.hassenforder.network.BasicAbstractReader;
 
 public class WifiReader extends BasicAbstractReader {
 
-	
-	//private static List<Event> events = new ArrayList<Event>();
-	private static Map<Long,Integer> counts = new HashMap<Long,Integer>();
-	
 	private List<Event> events;
 	private String versionCode;
 	private Version version;
-
 	private long id;
 	private String kind;
 
@@ -66,7 +61,6 @@ public class WifiReader extends BasicAbstractReader {
 			this.id = this.readLong();
 			this.kind = this.readString();
 			break;
-		
 		}
 	}
 	
@@ -191,6 +185,4 @@ public class WifiReader extends BasicAbstractReader {
 		int alarm = this.readInt();
 		return new Usage(borrower, event, usage, detail, alarm);
 	}
-	
-
 }

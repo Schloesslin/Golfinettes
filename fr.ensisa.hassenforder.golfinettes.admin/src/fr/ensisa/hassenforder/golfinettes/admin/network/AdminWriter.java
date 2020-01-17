@@ -59,7 +59,6 @@ public class AdminWriter extends BasicAbstractWriter {
 	}
 	
 	public void writeGolfinettes() {
-
 		this.writeInt(Protocol.RQ_GOLFINETTES);
 	}
 

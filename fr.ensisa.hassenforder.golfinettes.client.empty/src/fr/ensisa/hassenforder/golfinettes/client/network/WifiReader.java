@@ -27,9 +27,7 @@ public class WifiReader extends BasicAbstractReader {
         case Protocol.RP_UPDATE_USER :
         	this.version = this.readVersion();
         	break;
-  
-        }
-        
+        } 
     }
 
 	public Version getVersion() {
@@ -46,6 +44,4 @@ public class WifiReader extends BasicAbstractReader {
 		}
 		return new Version(versionCode, fileContent1, fileContent2);
 	}
-
-
 }
