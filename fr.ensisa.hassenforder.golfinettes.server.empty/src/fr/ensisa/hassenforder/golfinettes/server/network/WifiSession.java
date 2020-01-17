@@ -50,11 +50,36 @@ public class WifiSession extends Thread {
 				writer.writeVersionUser(listener.getUsersVersion());
 				break;
 			case Protocol.SEND_UPDATE_SOFTWARE:
-				return listener.putSoftwareVersion(reader.getVersion());
+				if(listener.getSoftwareVersion() != null) {
+					if(Float.parseFloat(reader.getVersion().getVersion()) > Float.parseFloat(listener.getSoftwareVersion().getVersion())) {
+						return listener.putSoftwareVersion(reader.getVersion());
+					}
+				}
+				else {
+					return listener.putSoftwareVersion(reader.getVersion());
+				}
+				return true;
 			case Protocol.SEND_UPDATE_MAP :
-				return listener.putMapVersion(reader.getVersion());
+				if(listener.getMapVersion() != null) {
+					if(Float.parseFloat(reader.getVersion().getVersion()) > Float.parseFloat(listener.getMapVersion().getVersion())) {
+						return listener.putMapVersion(reader.getVersion());
+					}
+				}
+				else {
+					return listener.putMapVersion(reader.getVersion());
+				}
+				
+				return true;
 			case Protocol.SEND_UPDATE_USER :
-				return listener.putUsersVersion(reader.getVersion());
+				if(listener.getUsersVersion() != null) {
+					if(Float.parseFloat(reader.getVersion().getVersion()) > Float.parseFloat(listener.getUsersVersion().getVersion())) {
+						return listener.putUsersVersion(reader.getVersion());
+					}
+				}
+				else {
+					return listener.putUsersVersion(reader.getVersion());
+				}
+				return true;
 			case Protocol.SEND_WIFI_EVENT:
 				return listener.addEvents(reader.getEvents());
 				
