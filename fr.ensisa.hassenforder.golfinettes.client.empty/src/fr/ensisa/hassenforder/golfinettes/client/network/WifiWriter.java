@@ -22,7 +22,6 @@ public class WifiWriter extends BasicAbstractWriter {
 			this.writeString("");
 		} else {
 			this.writeString(v);
-
 		}
 	}
 
@@ -32,7 +31,6 @@ public class WifiWriter extends BasicAbstractWriter {
 			this.writeString("");
 		} else {
 			this.writeString(v);
-
 		}
 	}
 
@@ -42,7 +40,6 @@ public class WifiWriter extends BasicAbstractWriter {
 			this.writeString("");
 		} else {
 			this.writeString(v);
-
 		}
 	}
 
@@ -111,5 +108,4 @@ public class WifiWriter extends BasicAbstractWriter {
 			}
 		}
 	}
-	
 }

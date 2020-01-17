@@ -103,13 +103,11 @@ public class GolfinetteSession implements ISession {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return false;
 	}
 
 	private enum Decision {
 		SIGFOX_STD, ALARME, MESSAGE_X, MESSAGE_Y,
-
 	}
 
 	private Decision decisionTaker(Event last) {
@@ -122,13 +120,11 @@ public class GolfinetteSession implements ISession {
 			}
 			return Decision.MESSAGE_X;
 		}
-
 		return Decision.SIGFOX_STD;
 	}
 
 	@Override
 	public void doSigFox(Event lastEvent) {
-//        try {
 		GolfinetteWriter w = new GolfinetteWriter("localhost", Protocol.GOLFINETTES_SIGFOX_PORT);
 		switch (decisionTaker(lastEvent)) {
 		case SIGFOX_STD:
@@ -144,9 +140,7 @@ public class GolfinetteSession implements ISession {
 			w.createAlarm(lastEvent);
 			break;
 		}
-		w.send();
-//        } catch (IOException e) {
-//        }
+		w.send();   
 	}
 
 }

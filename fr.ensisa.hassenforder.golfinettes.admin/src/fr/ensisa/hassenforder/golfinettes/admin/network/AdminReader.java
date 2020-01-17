@@ -20,7 +20,6 @@ public class AdminReader extends BasicAbstractReader {
 	}
 
 	public void receive() {
-		
 		type = readInt();
 		version = null;
 		events = null;

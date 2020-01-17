@@ -10,8 +10,6 @@ import fr.ensisa.hassenforder.golfinettes.client.model.Battery;
 import fr.ensisa.hassenforder.golfinettes.client.model.Event;
 import fr.ensisa.hassenforder.golfinettes.client.model.Location;
 import fr.ensisa.hassenforder.golfinettes.client.model.Usage;
-import fr.ensisa.hassenforder.golfinettes.client.model.Usage.BorrowerEvent;
-import fr.ensisa.hassenforder.golfinettes.client.model.Usage.UsageState;
 import fr.ensisa.hassenforder.golfinettes.network.Protocol;
 import fr.ensisa.hassenforder.network.BasicAbstractWriter;
 

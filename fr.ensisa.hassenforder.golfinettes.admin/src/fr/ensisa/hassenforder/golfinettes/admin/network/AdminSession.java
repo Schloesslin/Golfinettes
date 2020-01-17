@@ -2,7 +2,6 @@ package fr.ensisa.hassenforder.golfinettes.admin.network;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.ensisa.hassenforder.golfinettes.admin.model.Event;
@@ -48,7 +47,6 @@ public class AdminSession implements ISession {
 			aw.send();
 			return version.getVersion();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -62,7 +60,6 @@ public class AdminSession implements ISession {
 			aw.send();
 			return version.getVersion();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -77,7 +74,6 @@ public class AdminSession implements ISession {
 			aw.send();
 			return version.getVersion();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -86,20 +82,14 @@ public class AdminSession implements ISession {
 	@Override
 	public List<Golfinette> doGetGolfinetteList() {
 		try {
-			
-
 			AdminWriter aw = new AdminWriter(this.wifi.getOutputStream());
 			aw.writeGolfinettes();
 			aw.send();
-			
 			AdminReader ar = new AdminReader(this.wifi.getInputStream());
 			ar.receive();
-
 			List<Golfinette> golfinettes = ar.getGolfinettes();
-
 			return golfinettes;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -114,12 +104,8 @@ public class AdminSession implements ISession {
 			AdminReader ar = new AdminReader(this.wifi.getInputStream());
 			ar.receive();
 			List<Event> allEvents = ar.getEvents();
-			
-			//System.out.println(events);
-			//System.out.println(events.size());
 			return allEvents;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
