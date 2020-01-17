@@ -34,6 +34,14 @@ public class BasicAbstractWriter {
             e.printStackTrace();
         }
     }
+    
+    protected void writeShort(short v) {
+    	try {
+    		output.writeShort(v);
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    }
 
     protected void writeInt(int v) {
         try {

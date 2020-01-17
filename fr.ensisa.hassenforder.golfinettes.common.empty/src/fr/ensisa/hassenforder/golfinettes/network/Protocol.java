@@ -7,6 +7,10 @@ public class Protocol {
 
     // left to help you (or not)
 	public static final int SIGFOX_STD				= 0x01;
+	public static final int MESSAGE_X				= 0x02;
+	public static final int MESSAGE_Y				= 0x03;
+	
+	public static final int ALARME					= -1;
 	
 	public static final int RQ_UPDATE_SOFTWARE		= 0x01;
 	public static final int SEND_UPDATE_SOFTWARE	= 0x02;

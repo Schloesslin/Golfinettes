@@ -95,7 +95,7 @@ public class GolfinetteSession implements ISession {
 
 			WifiWriter ww = new WifiWriter(wifi.getOutputStream());
 
-			ww.writeAllEvents(events );
+			ww.writeAllEvents(events);
 			ww.send();
 
 			return true;
@@ -113,9 +113,13 @@ public class GolfinetteSession implements ISession {
 	}
 
 	private Decision decisionTaker(Event last) {
-		if (last.getBattery().getLoad() < 20) {
+		if (last.getUsage().getAlarm() != 0) {
 			return Decision.ALARME;
 		} else if (last.getBattery().getLoad() < 40) {
+			if (last.getUsage().getUsage() == UsageState.STEADY_NORMAL
+					|| last.getUsage().getUsage() == UsageState.STEADY_LONG) {
+				return Decision.MESSAGE_Y;
+			}
 			return Decision.MESSAGE_X;
 		}
 
@@ -129,6 +133,15 @@ public class GolfinetteSession implements ISession {
 		switch (decisionTaker(lastEvent)) {
 		case SIGFOX_STD:
 			w.createSigFoxStd(lastEvent);
+			break;
+		case MESSAGE_X:
+			w.createMessageX(lastEvent);
+			break;
+		case MESSAGE_Y:
+			w.createMessageY(lastEvent);
+			break;
+		case ALARME:
+			w.createAlarm(lastEvent);
 			break;
 		}
 		w.send();

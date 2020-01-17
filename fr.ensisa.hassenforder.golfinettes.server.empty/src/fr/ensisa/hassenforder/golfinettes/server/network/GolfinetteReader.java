@@ -25,7 +25,7 @@ public class GolfinetteReader extends BasicAbstractReader {
 	private int readAsByte() {
 		return (int) (readByte() & 0xFF);
 	}
-	
+
 	private float readFloatAsByte() {
 		ByteBuffer b = ByteBuffer.allocate(4);
 		for (int i = 0; i < 3; i++) {
@@ -35,15 +35,104 @@ public class GolfinetteReader extends BasicAbstractReader {
 		return b.getFloat(0);
 	}
 
-	public Event readSigFoxStd () throws IOException {
-		System.out.println("test");
+	public Event readSigFoxStd() throws IOException {
 		long id = this.readLong();
 		long timeStamp = this.readLong();
 		Location loc = this.readLocation();
+		Usage usage = this.readUsage();
+		return new Event(id, timeStamp, "sigfox").withLocation(loc).withUsage(usage);
+	}
+
+	public Event readMessageX() throws IOException {
+		long id = this.readLong();
+		long timeStamp = this.readLong();
+		Location loc = this.readLocation();
+		Battery battery = this.readBattery();
+		return new Event(id, timeStamp, "sigfox").withLocation(loc).withBattery(battery);
+	}
+
+	public Event readMessageY() throws IOException {
+		long id = this.readLong();
+		long timeStamp = this.readLong();
+		Battery battery = this.readBattery();
+		Usage usage = this.readUsage();
+		int temperature = this.readShort();
+		int humidity = this.readShort();
+		Location loc = new Location(Float.NaN, Float.NaN, temperature, humidity);
+		return new Event(id, timeStamp, "sigfox").withLocation(loc).withBattery(battery).withUsage(usage);
+	}
+
+	private Event readAlarme() throws IOException {
+		long id = this.readLong();
+		long timeStamp = this.readLong();
+		int alarm = this.readAsByte();
+		float latitude = this.readFloatAsByte();
+		float longitude = this.readFloatAsByte();
+		int temperature = this.readAsByte();
+		Location loc = new Location(latitude, longitude, temperature, -1);
+		int temperatureBattery = this.readAsByte();
 		int load = this.readAsByte();
-		//int temperature = this.readAsByte();
+		int dischargeCurrent = this.readAsByte();
+		int b = this.readAsByte();
+		int modeValue = (b >> 4) & 0xf;
 		BatteryMode mode = null;
-		switch(this.readAsByte()) {
+		switch (modeValue) {
+		case 0:
+			mode = BatteryMode.FAST_CHARGING;
+			break;
+		case 1:
+			mode = BatteryMode.PLUGGED_ONLY;
+			break;
+		case 2:
+			mode = BatteryMode.SLOW_CHARGING;
+			break;
+		case 3:
+			mode = BatteryMode.UNPLUGGED;
+			break;
+		}
+		int borrowerValue = (b >> 2) & 0x3;
+		BorrowerEvent borrowerEvent = null;
+		switch (borrowerValue) {
+		case 0:
+			borrowerEvent = BorrowerEvent.BORROW;
+			break;
+		case 1:
+			borrowerEvent = BorrowerEvent.FREE;
+			break;
+		case 2:
+			borrowerEvent = BorrowerEvent.RETURN;
+			break;
+		}
+		int usageValue = b & 0x3;
+		UsageState usageState = null;
+		switch (usageValue) {
+		case 0:
+			usageState = UsageState.MOVING_BACK;
+			break;
+		case 1:
+			usageState = UsageState.MOVING_NORMAL;
+			break;
+		case 2:
+			usageState = UsageState.STEADY_LONG;
+			break;
+		case 3:
+			usageState = UsageState.STEADY_NORMAL;
+			break;
+		}
+		Battery battery = new Battery(temperatureBattery, load, -1, dischargeCurrent, mode);
+		Usage usage = new Usage(-1, borrowerEvent, usageState, 0, alarm);
+		return new Event(id, timeStamp, "sigfox").withLocation(loc).withBattery(battery).withUsage(usage);
+	}
+
+	private Battery readBattery() {
+		int temperature = this.readAsByte();
+		int load = this.readAsByte();
+		int dischargeCurrent = this.readAsByte();
+		int b = this.readAsByte();
+		int loadingCurrent = (b >> 4) & 0xf;
+		int modeValue = b & 0xf;
+		BatteryMode mode = null;
+		switch (modeValue) {
 		case 1:
 			mode = BatteryMode.FAST_CHARGING;
 			break;
@@ -57,13 +146,9 @@ public class GolfinetteReader extends BasicAbstractReader {
 			mode = BatteryMode.UNPLUGGED;
 			break;
 		}
-		Battery battery = new Battery(Integer.MIN_VALUE, load, -1, -1, mode);
-		BorrowerEvent borrowerEvent = this.readBorrowerEvent();
-		UsageState usageState = this.readUsageState();
-		Usage usage = new Usage(-1, borrowerEvent, usageState, -1, -1);
-		return new Event(id, timeStamp, "sigfox").withLocation(loc).withBattery(battery).withUsage(usage);
+		return new Battery(temperature, load, loadingCurrent, dischargeCurrent, mode);
 	}
-	
+
 	private Location readLocation() {
 		float latitude = this.readFloatAsByte();
 		float longitude = this.readFloatAsByte();
@@ -71,33 +156,43 @@ public class GolfinetteReader extends BasicAbstractReader {
 		int humidity = this.readAsByte();
 		return new Location(latitude, longitude, temperature, humidity);
 	}
-	
-	private BorrowerEvent readBorrowerEvent() {
-		switch (this.readByte()) {
+
+	private Usage readUsage() {
+		int b = this.readAsByte();
+		int eventValue = b & 0xf;
+		int usageValue = (b >> 4) & 0xf;
+		UsageState usage = null;
+		switch (usageValue) {
 		case 1:
-			return BorrowerEvent.FREE;
+			usage = UsageState.STEADY_NORMAL;
+			break;
 		case 2:
-			return BorrowerEvent.BORROW;
+			usage = UsageState.STEADY_LONG;
+			break;
 		case 3:
-			return BorrowerEvent.RETURN;
-		default:
-			return null;
-		}
-	}
-	
-	private UsageState readUsageState() {
-		switch (this.readByte()) {
-		case 1:
-			return UsageState.STEADY_NORMAL;
-		case 2:
-			return UsageState.MOVING_NORMAL;
-		case 3:
-			return UsageState.STEADY_LONG;
+			usage = UsageState.MOVING_NORMAL;
+			break;
 		case 4:
-			return UsageState.MOVING_BACK;
-		default:
-			return null;
+			usage = UsageState.MOVING_BACK;
+			break;
 		}
+		long borrower = 0;
+		BorrowerEvent event = null;
+		switch (eventValue) {
+		case 1:
+			event = BorrowerEvent.FREE;
+			break;
+		case 2:
+			event = BorrowerEvent.BORROW;
+			borrower = (long) this.readShort();
+			break;
+		case 3:
+			event = BorrowerEvent.RETURN;
+			borrower = (long) this.readShort();
+			break;
+		}
+		int detail = this.readAsByte();
+		return new Usage(borrower, event, usage, detail, 0);
 	}
 
 	public void receive() throws IOException {
@@ -107,6 +202,15 @@ public class GolfinetteReader extends BasicAbstractReader {
 			break;
 		case Protocol.SIGFOX_STD:
 			event = readSigFoxStd();
+			break;
+		case Protocol.MESSAGE_X:
+			event = readMessageX();
+			break;
+		case Protocol.MESSAGE_Y:
+			event = readMessageY();
+			break;
+		case Protocol.ALARME:
+			event = readAlarme();
 			break;
 		}
 	}

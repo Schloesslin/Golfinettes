@@ -11,14 +11,15 @@ public class GolfinetteSession extends Thread {
 
 	private DatagramPacket packet;
 	private NetworkListener listener;
-	
+
 	public GolfinetteSession(DatagramPacket packet, NetworkListener listener) {
 		this.packet = packet;
 		this.listener = listener;
-		if( listener == null) throw new RuntimeException("listener cannot be null");
+		if (listener == null)
+			throw new RuntimeException("listener cannot be null");
 	}
 
-	public void close () {
+	public void close() {
 		this.interrupt();
 		packet = null;
 	}
@@ -27,17 +28,35 @@ public class GolfinetteSession extends Thread {
 		Event event = reader.getEvent();
 		listener.addEvent(event);
 	}
+	
+//	private void processMessageX(GolfinetteReader reader) {
+//		Event event = reader.getEvent();
+//		listener.addEvent(event);
+//	}
 
 	public void operate() {
 		try {
-			GolfinetteReader reader = new GolfinetteReader (packet.getData());
-			reader.receive ();
-			switch (reader.getType ()) {
-			case Protocol.SIGFOX_STD		: processSigFoxStd (reader); break;
+			GolfinetteReader reader = new GolfinetteReader(packet.getData());
+			reader.receive();
+			switch (reader.getType()) {
+			case Protocol.SIGFOX_STD:
+				processSigFoxStd(reader);
+				break;
+			case Protocol.MESSAGE_X:
+				processSigFoxStd(reader);
+				break;
+			case Protocol.MESSAGE_Y:
+				processSigFoxStd(reader);
+				break;
+			case Protocol.ALARME:
+				processSigFoxStd(reader);
+				break;
 			}
 		} catch (IOException e) {
 		}
 	}
+
+	
 
 	public void run() {
 		operate();
